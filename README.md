@@ -52,11 +52,11 @@ The graph [Figure 3.3] indicates a high degree of volatility in options with ver
 
 Because we aim to uncover specific patterns and detailed insights, we conducted industry-specific analysis, delving into the unique volatility dynamics within different sectors. The first graph [Figure 3.4] illustrates the average daily volatility against the days to expiry for options in the Financial Services sector. Notably, there is a significant peak in volatility around 20 days to expiry, where the average daily volatility rises to approximately 18. This suggests a period of heightened market uncertainty and increased trading activity as options approach this critical threshold. Volatility then sharply declines after this peak but remains elevated until around 40 days to expiry, after which it stabilises at lower levels. The pattern indicates that as options near their expiry, market participants in the Financial Services sector may engage in more aggressive trading or hedging activities, leading to increased price fluctuations.
 
-![Volatility Analysis, Financial Sector](mages/volatility@10analysis%20financial%20sector.png)
+![Volatility Analysis, Financial Sector](mages/volatility%20analysis%20financial%20sector.png)
 
 The second graph focuses on the Media sector, showing the average daily volatility against the days to expiry. Similar to the Financial Services sector, a distinct peak in volatility is observed around 20 days to expiry, reaching approximately 6. This spike suggests increased trading activity or market reactions to specific events as options approach this expiration window. After this peak, volatility decreases steadily, with occasional minor spikes, and stabilises at lower levels as the expiry date approaches. The volatility pattern in the Media sector indicates that significant price movements are concentrated in the period leading up to the 20-day mark, potentially driven by sector-specific news or market sentiment shifts.
 
-![Volatility Analysis, Media Sector](mages/volatility@10analysis%20media%20sector.png)
+![Volatility Analysis, Media Sector](mages/volatility%20analysis%20media%20sector.png)
 
 The scatter plot above depicts the 20-day moving average of closing prices against the days to expiry for options contracts. The data points reveal an intriguing pattern in how the moving average of closing prices evolves as options approach their expiration dates. It appears that the moving average tends to stabilise as the days to expiry increase. In the initial periods, especially within the first 40 days, there is significant fluctuation and higher variability in the moving average of closing prices. This high volatility during the early stages could be attributed to market participants' speculative activities and rapid reactions to market news or events.
 
@@ -79,7 +79,7 @@ In this section, the goal is to explore the informational content of the dynamic
 - Value of contracts in lakh
 - Change in open interest
 - Days to expiry
-- 
+
 It is important to note that we did not include returns. Firstly, they are non-investable as
 they are not available for investors unless the contract expires; secondly, we would need rolled data for such a calculation.
 Additionally, we have separated the original dataset into 14 sections by industry. Next, we have proceeded to perform the PCA on each dataframe to identify for which industries this analysis will have the most explanatory power and could be implemented in the regression to develop our trading strategy.
@@ -89,11 +89,11 @@ Additionally, we have separated the original dataset into 14 sections by industr
 Denoting time as t = 1...T and letting p be the number of variables, we create a (T x 1) vector x.
 Next, since the variables are influenced by the same driving forces, we create p artificial variables - components - as linear combinations of the x vectors orthogonal (perpendicular) to each other, and they reproduce the original variance-covariance of the data reducing noise at the same time. The first component is constructed so that it explains as much variability as possible, the second one explains the rest of the variance, but, additionally, it is not correlated with the first component, and so on. Thus, the analysis turns out to be a maximisation problem, which we solve by finding the first order condition
 
-![Formula#1](mages/formula%201.png)
+$$(X'X - \lambda I)A = 0$$
 
 Where 𝝺 is the Langrange multiplier and I is the (p x p) identity matrix. Through the above equation, the PCA calculates the eigenvalues (𝝺) and the eigenvectors A of the variance-covariance matrix X’X. The variance explained by the i-th component is given by the i-th eigenvalue divided by the sum of all the eigenvalues:
 
-![Formula#2](mages/formula%202.png)
+$$p = \frac{\lambda_i}{\sum \lambda_i}$$
 
 This allows us to quantify the significance of the PCs identified.
 Following the methodology of Frachot, Jansi and Lacoste (1992) and Duerr and Voegeli (2009), we perform an ADF test for the variables of interest for stationarity to get more reliable PCA results; we find that they are indeed stationary and proceed to conduct the PC analysis over our dataset.
@@ -124,7 +124,7 @@ These findings delve into the essential characteristics of the significant compo
 Having identified the industries of interest and having formulated the Principal Components that aggregate the variance of the initial variables, we run a linear regression to predict prices using our principal components for portfolios comprising contracts from the two indices and the two industries identified in the eigenvalue test for significance.
 We regress using the following formula:
 
-![formula#4](mages/rformula%204.png)
+$$return_{t-1,i} = \beta_0 + \beta PC_{t,i}^n + u$$
 
 And obtain the following results:
 
